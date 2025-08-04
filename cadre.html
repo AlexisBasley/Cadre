@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture SI - Bouygues Construction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #003366;
+            --secondary: #FF6600;
+            --light: #F5F7FA;
+            --dark: #1A1A1A;
+            --gray: #6C757D;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), #004080);
+            color: white;
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+            opacity: 0.3;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo {
+            height: 60px;
+            margin-right: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+        
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        section {
+            margin-bottom: 4rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .architecture-diagram {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .diagram-container {
+            position: relative;
+            height: 500px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .layer {
+            position: absolute;
+            width: 80%;
+            left: 10%;
+            height: 80px;
+            background-color: white;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .layer:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .layer-1 {
+            top: 20px;
+            background-color: rgba(0, 51, 102, 0.1);
+        }
+        
+        .layer-2 {
+            top: 120px;
+            background-color: rgba(0, 51, 102, 0.2);
+        }
+        
+        .layer-3 {
+            top: 220px;
+            background-color: rgba(0, 51, 102, 0.3);
+        }
+        
+        .layer-4 {
+            top: 320px;
+            background-color: rgba(0, 51, 102, 0.4);
+        }
+        
+        .layer-5 {
+            top: 420px;
+            background-color: rgba(0, 51, 102, 0.5);
+        }
+        
+        .connector {
+            position: absolute;
+            width: 4px;
+            height: 40px;
+            background-color: var(--secondary);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .connector-1 {
+            top: 100px;
+        }
+        
+        .connector-2 {
+            top: 200px;
+        }
+        
+        .connector-3 {
+            top: 300px;
+        }
+        
+        .connector-4 {
+            top: 400px;
+        }
+        
+        .principle-list {
+            list-style-type: none;
+            margin-left: 1rem;
+        }
+        
+        .principle-list li {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .principle-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--secondary);
+            position: absolute;
+            left: 0;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: var(--primary);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid var(--secondary);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left::after {
+            right: -12px;
+        }
+        
+        .right::after {
+            left: -12px;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #e65c00;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--secondary);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 0;
+                padding: 0.5rem 2rem;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .left, .right {
+                left: 0;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animated {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-bg"></div>
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="https://www.bouygues-construction.com/wp-content/themes/bouygues-construction/assets/images/logo.svg" alt="Bouygues Construction" class="logo">
+            </div>
+            <h1>Architecture du Système d'Information</h1>
+            <p class="subtitle">Cadre de référence et bonnes pratiques pour l'architecture du SI de Bouygues Construction</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="nav-container">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#presentation"><i class="fas fa-home"></i> Présentation</a></li>
+                <li><a href="#architecture"><i class="fas fa-project-diagram"></i> Architecture</a></li>
+                <li><a href="#principes"><i class="fas fa-lightbulb"></i> Principes</a></li>
+                <li><a href="#technologies"><i class="fas fa-microchip"></i> Technologies</a></li>
+                <li><a href="#evolution"><i class="fas fa-chart-line"></i> Évolution</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <section id="presentation" class="animated">
+            <h2>Présentation</h2>
+            <p>Le cadre d'architecture du système d'information de Bouygues Construction définit les orientations stratégiques, les principes directeurs et les standards technologiques pour concevoir, développer et maintenir notre écosystème informatique.</p>
+            
+            <div class="card-container">
+                <div class="card animated delay-1">
+                    <div class="card-header">
+                        <i class="fas fa-bullseye card-icon"></i>
+                        <h3>Objectifs</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Notre architecture SI vise à :</p>
+                        <ul class="principle-list">
+                            <li>Standardiser les solutions techniques</li>
+                            <li>Faciliter l'intégration des systèmes</li>
+                            <li>Optimiser les coûts d'exploitation</li>
+                            <li>Garantir la sécurité des données</li>
+                            <li>Accompagner la transformation digitale</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card animated delay-2">
+                    <div class="card-header">
+                        <i class="fas fa-users card-icon"></i>
+                        <h3>Public concerné</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Ce cadre s'adresse à :</p>
+                        <ul class="principle-list">
+                            <li>Les architectes SI</li>
+                            <li>Les chefs de projet</li>
+                            <li>Les développeurs</li>
+                            <li>Les responsables métiers</li>
+                            <li>Les équipes d'exploitation</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card animated delay-3">
+                    <div class="card-header">
+                        <i class="fas fa-book card-icon"></i>
+                        <h3>Documentation</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Ressources disponibles :</p>
+                        <ul class="principle-list">
+                            <li>Guide d'architecture</li>
+                            <li>Modèles de référence</li>
+                            <li>Bonnes pratiques</li>
+                            <li>Catalogues technologiques</li>
+                            <li>Cas d'utilisation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="architecture" class="animated">
+            <h2>Architecture du SI</h2>
+            <p>Notre système d'information repose sur une architecture en couches, permettant une séparation claire des responsabilités et une meilleure maintenabilité.</p>
+            
+            <div class="architecture-diagram animated delay-1">
+                <h3>Architecture en couches</h3>
+                <div class="diagram-container">
+                    <div class="layer layer-1">Couche Utilisateurs & Interfaces</div>
+                    <div class="connector connector-1"></div>
+                    <div class="layer layer-2">Couche Applications Métier</div>
+                    <div class="connector connector-2"></div>
+                    <div class="layer layer-3">Couche Services Partagés</div>
+                    <div class="connector connector-3"></div>
+                    <div class="layer layer-4">Couche Données</div>
+                    <div class="connector connector-4"></div>
+                    <div class="layer layer-5">Couche Infrastructure</div>
+                </div>
+            </div>
+            
+            <div class="card-container">
+                <div class="card animated delay-2">
+                    <div class="card-header">
+                        <i class="fas fa-desktop card-icon"></i>
+                        <h3>Couche Utilisateurs & Interfaces</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Points d'accès au SI : portails web, applications mobiles, postes de travail, interfaces métiers.</p>
+                        <p><strong>Technologies :</strong> React, Angular, Flutter, SharePoint</p>
+                    </div>
+                </div>
+                
+                <div class="card animated delay-3">
+                    <div class="card-header">
+                        <i class="fas fa-cogs card-icon"></i>
+                        <h3>Couche Applications Métier</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Applications spécifiques aux métiers de la construction : GMAO, GPAO, BIM, gestion de projets.</p>
+                        <p><strong>Technologies :</strong> Java EE, .NET Core, Spring Boot</p>
+                    </div>
+                </div>
+                
+                <div class="card animated delay-4">
+                    <div class="card-header">
+                        <i class="fas fa-puzzle-piece card-icon"></i>
+                        <h3>Couche Services Partagés</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Services transverses : authentification, messagerie, workflow, reporting, API management.</p>
+                        <p><strong>Technologies :</strong> API REST, GraphQL, Kafka, RabbitMQ</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="principes" class="animated">
+            <h2>Principes d'architecture</h2>
+            <p>Nos principes directeurs guident les décisions architecturales et garantissent la cohérence du système d'information.</p>
+            
+            <div class="card-container">
+                <div class="card animated delay-1">
+                    <div class="card-header">
+                        <i class="fas fa-shield-alt card-icon"></i>
+                        <h3>Sécurité</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="principle-list">
+                            <li>Authentification centralisée (SSO)</li>
+                            <li>Chiffrement des données sensibles</li>
+                            <li>Contrôle d'accès basé sur les rôles</li>
+                            <li>Audit des activités critiques</li>
+                            <li>Conformité RGPD</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card animated delay-2">
+                    <div class="card-header">
+                        <i class="fas fa-exchange-alt card-icon"></i>
+                        <h3>Interopérabilité</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="principle-list">
+                            <li>Standards ouverts (REST, JSON, OData)</li>
+                            <li>Contrats d'interface formalisés</li>
+                            <li>Bus d'entreprise pour l'intégration</li>
+                            <li>Catalogues d'API documentées</li>
+                            <li>Modèles de données partagés</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card animated delay-3">
+                    <div class="card-header">
+                        <i class="fas fa-expand card-icon"></i>
+                        <h3>Scalabilité</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="principle-list">
+                            <li>Architecture microservices</li>
+                            <li>Conteneurisation (Docker, Kubernetes)</li>
+                            <li>Auto-scaling horizontal</li>
+                            <li>Bases de données distribuées</li>
+                            <li>Load balancing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-container animated delay-4">
+               
+</html>
